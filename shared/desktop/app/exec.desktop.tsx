@@ -21,6 +21,7 @@ export default function(
   callback: (err: any, attempted: boolean, stdout: string, stderr: string) => void
 ): void {
   const platform = os.platform()
+  logger.info('Exec (%s,%s,%s,%s,%s) on %s', path, args, platformOnly, runModeOnly, killOnExit, platform)
   if (platformOnly && platform !== platformOnly) {
     logger.info('Exec (%s) not available for platform: %s != %s', path, platformOnly, platform)
     if (callback) callback(null, false, '', '')

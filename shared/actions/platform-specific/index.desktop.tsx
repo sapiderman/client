@@ -80,12 +80,14 @@ function* initializeInputMonitor(): Iterable<any> {
 }
 
 export const dumpLogs = async (_?: Container.TypedState, action?: ConfigGen.DumpLogsPayload) => {
+  const quitAfterDump = action && action.payload.reason === 'quitting through menu'
+  logger.info('beginning log dump; quit=%s', quitAfterDump)
   const fromRender = await logger.dump()
   const globalLogger: typeof logger = SafeElectron.getRemote().getGlobal('globalLogger')
   const fromMain = await globalLogger.dump()
   await writeLogLinesToFile([...fromRender, ...fromMain])
   // quit as soon as possible
-  if (action && action.payload.reason === 'quitting through menu') {
+  if (quitAfterDump) {
     quit()
   }
 }
@@ -177,7 +179,7 @@ const onPgpgKeySecret = () =>
 const onShutdown = (_: Container.TypedState, action: EngineGen.Keybase1NotifyServiceShutdownPayload) => {
   const {code} = action.payload.params
   if (isWindows && code !== RPCTypes.ExitCode.restart) {
-    console.log('Quitting due to service shutdown with code: ', code)
+    logger.info('Quitting due to service shutdown with code: ', code)
     // Quit just the app, not the service
     SafeElectron.getApp().quit()
   }

@@ -40,9 +40,9 @@ export function quit(appOnly: boolean = false) {
 
   logger.info('Quit the app')
   ctlStop(function(stopErr) {
-    logger.info('Done with ctlstop')
+    logger.info('Done with ctlStop')
     if (stopErr) {
-      logger.info('Error in ctl stop, when quitting:', stopErr)
+      logger.info('Error in ctlStop, when quitting:', stopErr)
     }
     exitApp()
   })

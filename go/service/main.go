@@ -1154,6 +1154,7 @@ func (d *Service) ListenLoop(l net.Listener) (err error) {
 		if c, err = l.Accept(); err != nil {
 
 			if libkb.IsSocketClosedError(err) {
+				d.G().Log.Debug("ListenLoop socket/pipe is closed")
 				err = nil
 			}
 
